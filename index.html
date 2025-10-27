@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Requisição API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #resultado {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            min-height: 50px;
+            word-break: break-all;
+        }
+        .status-sucesso {
+            color: green;
+            font-weight: bold;
+        }
+        .status-erro {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Requisição à API na EC2</h2>
+    <p>Endpoint: <code>http://192.168.1.111:8080/</code></p>
+    
+    <button id="btnRequisitar">Fazer Requisição GET</button>
+    
+    <h3>Resultado da API:</h3>
+    <div id="resultado">Aguardando requisição...</div>
+</div>
+
+<script>
+    // URL do seu endpoint
+    const ENDPOINT_URL = 'http://192.168.1.111:8080/';
+
+    document.getElementById('btnRequisitar').addEventListener('click', fazerRequisicao);
+
+    async function fazerRequisicao() {
+        const resultadoDiv = document.getElementById('resultado');
+        
+        // Limpa o resultado anterior
+        resultadoDiv.innerHTML = 'Carregando...';
+        resultadoDiv.className = '';
+
+        try {
+            // Usa a API fetch para fazer a requisição GET
+            const response = await fetch(ENDPOINT_URL, {
+                method: 'GET',
+                // Modo no-cors pode ser usado para evitar erros CORS, mas não permite ler o corpo da resposta
+                // mode: 'cors' // Deixe 'cors' se o servidor estiver configurado corretamente
+            });
+
+            if (!response.ok) {
+                // Lança um erro se o status HTTP não for 2xx
+                throw new Error(`Erro HTTP! Status: ${response.status}`);
+            }
+
+            // A API de exemplo retorna JSON, então lemos a resposta como JSON
+            const data = await response.json();
+            
+            // Exibe a mensagem de sucesso e o JSON retornado
+            resultadoDiv.innerHTML = `
+                <p class="status-sucesso">Sucesso (Status ${response.status})</p>
+                <p><strong>Corpo da Resposta:</strong> ${JSON.stringify(data, null, 2)}</p>
+                <p>Mensagem Esperada: <strong>${data.mensagem}</strong></p>
+            `;
+            
+        } catch (error) {
+            // Trata erros de rede ou erros HTTP
+            console.error('Falha na requisição:', error);
+            resultadoDiv.innerHTML = `
+                <p class="status-erro">Falha ao conectar à API.</p>
+                <p>Detalhes: ${error.message}</p>
+                <p><strong> Possível problema de CORS:</strong> Verifique se o servidor (${ENDPOINT_URL}) permite acesso do seu endereço.</p>
+            `;
+        }
+    }
+</script>
+
+</body>
+</html>
