@@ -1,118 +1,64 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teste de Requisição API</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f4f4f9;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #resultado {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            background-color: #e9ecef;
-            border-radius: 5px;
-            min-height: 50px;
-            word-break: break-all;
-        }
-        .status-sucesso {
-            color: green;
-            font-weight: bold;
-        }
-        .status-erro {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home - E-commerce</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f9f9f9; }
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: #d9b24c; color: #333; }
+    .navbar a { color: #333; margin-left: 15px; text-decoration: none; font-weight: bold; }
+    .search-box input { padding: 8px; width: 250px; border: 1px solid #888; }
+    .hero-img { display: block; margin: 40px auto; width: 80%; max-width: 700px; }
+    .about, .credibility, .products { max-width: 900px; margin: 40px auto; line-height: 1.6; }
+    .about h2, .credibility h2, .products h2 { text-align: center; }
+    .product-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+    .product-card { background: #fff; padding: 20px; border: 1px solid #ccc; text-align: center; }
+  </style>
 </head>
 <body>
+  <div class="navbar">
+    <div class="logo">Minha Loja</div>
+    <div class="search-box">
+      <input type="text" placeholder="Pesquisar produtos..." />
+    </div>
+    <div>
+      <a href="login.html">Login</a>
+      <a href="register.html">Cadastro</a>
+    </div>
+  </div>
 
-<div class="container">
-    <h2>Requisição à API na EC2</h2>
-    <p>Endpoint: <code>http://192.168.1.111:8080/</code></p>
-    
-    <button id="btnRequisitar">Fazer Requisição GET</button>
-    
-    <h3>Resultado da API:</h3>
-    <div id="resultado">Aguardando requisição...</div>
-</div>
+  <img class="hero-img" src="https://via.placeholder.com/900x300" alt="Imagem da loja" />
 
-<script>
-    // URL do seu endpoint
-    const ENDPOINT_URL = 'http://98.93.222.97:8080/';
+  <div class="about">
+    <h2>Sobre a Plataforma</h2>
+    <p>Bem-vindo ao nosso e-commerce! Aqui você encontra produtos variados e de qualidade. Buscamos inovação, preços acessíveis e praticidade para o seu dia a dia.</p>
+  </div>
 
-    document.getElementById('btnRequisitar').addEventListener('click', fazerRequisicao);
+  <div class="credibility">
+    <h2>Por que comprar conosco?</h2>
+    <p>- Mais de 10 anos de experiência no mercado.</p>
+    <p>- Entregas rápidas para todo o Brasil.</p>
+    <p>- Pagamento seguro e diversos métodos disponíveis.</p>
+    <p>- Suporte ao cliente dedicado e atendimento humanizado.</p>
+    <p>- Garantia de troca e devolução simples e sem complicações.</p>
+  </div>
 
-    async function fazerRequisicao() {
-        const resultadoDiv = document.getElementById('resultado');
-        
-        // Limpa o resultado anterior
-        resultadoDiv.innerHTML = 'Carregando...';
-        resultadoDiv.className = '';
+  <div class="products">
+    <h2>Produtos</h2>
+    <div class="product-list" id="product-list"></div>
+  </div>
 
-        try {
-            // Usa a API fetch para fazer a requisição GET
-            const response = await fetch(ENDPOINT_URL, {
-                method: 'GET',
-                // Modo no-cors pode ser usado para evitar erros CORS, mas não permite ler o corpo da resposta
-                // mode: 'cors' // Deixe 'cors' se o servidor estiver configurado corretamente
-            });
-
-            if (!response.ok) {
-                // Lança um erro se o status HTTP não for 2xx
-                throw new Error(`Erro HTTP! Status: ${response.status}`);
-            }
-
-            // A API de exemplo retorna JSON, então lemos a resposta como JSON
-            const data = await response.json();
-            
-            // Exibe a mensagem de sucesso e o JSON retornado
-            resultadoDiv.innerHTML = `
-                <p class="status-sucesso">Sucesso (Status ${response.status})</p>
-                <p><strong>Corpo da Resposta:</strong> ${JSON.stringify(data, null, 2)}</p>
-                <p>Mensagem Esperada: <strong>${data.mensagem}</strong></p>
-            `;
-            
-        } catch (error) {
-            // Trata erros de rede ou erros HTTP
-            console.error('Falha na requisição:', error);
-            resultadoDiv.innerHTML = `
-                <p class="status-erro">Falha ao conectar à API.</p>
-                <p>Detalhes: ${error.message}</p>
-                <p><strong> Possível problema de CORS:</strong> Verifique se o servidor (${ENDPOINT_URL}) permite acesso do seu endereço.</p>
-            `;
-        }
-    }
-</script>
-
+  <script>
+    const products = [ { name: "Produto Exemplo 1" }, { name: "Produto Exemplo 2" }, { name: "Produto Exemplo 3" } ];
+    const container = document.getElementById("product-list");
+    products.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "product-card";
+      card.textContent = p.name;
+      container.appendChild(card);
+    });
+  </script>
 </body>
 </html>
+

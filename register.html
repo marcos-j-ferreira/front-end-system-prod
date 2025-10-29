@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro - E-commerce</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f9f9f9; }
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: #d9b24c; color: #333; }
+    .navbar a { color: #333; margin-left: 15px; text-decoration: none; font-weight: bold; }
+    .container { max-width: 400px; margin: 60px auto; background: #fff; padding: 30px; border: 1px solid #ccc; }
+    input { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #aaa; }
+    button { width: 100%; padding: 10px; background: #333; color: #fff; border: none; cursor: pointer; }
+    button:hover { opacity: 0.9; }
+    .error { color: red; margin-bottom: 10px; font-size: 14px; }
+    .success { color: green; margin-bottom: 10px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">Minha Loja</div>
+    <div>
+      <a href="login.html">Login</a>
+      <a href="index.html">Home</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Cadastro</h2>
+
+    <div id="message"></div>
+
+    <input type="text" id="username" placeholder="Usuário" />
+    <input type="password" id="password" placeholder="Senha" />
+    <input type="password" id="confirm" placeholder="Confirmar Senha" />
+
+    <button onclick="register()">Cadastrar</button>
+  </div>
+
+  <script>
+    async function register() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm').value;
+      const message = document.getElementById('message');
+
+      message.innerHTML = '';
+
+      if (!username || !password || !confirm) {
+        message.innerHTML = '<p class="error">Preencha todos os campos.</p>';
+        return;
+      }
+
+      if (password !== confirm) {
+        message.innerHTML = '<p class="error">As senhas não coincidem.</p>';
+        return;
+      }
+
+      try {
+        const response = await fetch('http://129.168.1.111:8080/v1/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          const errorMessage = errorData.message || 'Não foi possível concluir o cadastro.';
+          message.innerHTML = `<p class="error">Erro: ${errorMessage}</p>`;
+          return;
+        }
+
+        message.innerHTML = '<p class="success">Cadastro realizado com sucesso!</p>';
+      }
+      catch (err) {
+        message.innerHTML = '<p class="error">Erro: API indisponível ou sem conexão.</p>';
+      }
+    }
+  </script>
+</body>
+</html>
