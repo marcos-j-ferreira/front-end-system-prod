@@ -34,6 +34,34 @@
     }
 
 
+    .security-alert {
+    background-color: #fcebeb; /* Fundo vermelho bem claro */
+    border: 1px solid #dc3545; /* Borda vermelha */
+    color: #dc3545; /* Texto vermelho escuro */
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    animation: pulse 1.5s infinite alternate; /* Adiciona uma pequena pulsação */
+}
+
+.security-alert p {
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Animação de pulsação suave */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.01);
+    }
+}
+
 .container {
   background: white;
   padding: 25px;
