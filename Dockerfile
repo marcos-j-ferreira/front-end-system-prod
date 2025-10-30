@@ -16,4 +16,4 @@ EXPOSE 80
 ## == Comandos
 
 # docker build -t --no-cache front-end:latest .
-# docker run -d -p 8080:80 --name front-end-web front-end:latest 
+# docker run -d -p 80:80 --name front-end-web front-end:latest 

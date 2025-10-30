@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login</title>
-  <link rel="stylesheet" href="style-02.css" />
+  <title>Usuários Cadastrados</title>
+  <link rel="stylesheet" href="style-03.css" />
 </head>
 <body>
+
 
    <div class="navbar">
     <div class="logo">Sistema de Login AWS</div>
@@ -14,26 +15,32 @@
       <a href="index.html">Home</a>
       <a href="login.html">Login</a>
       <a href="register.html">Cadastro</a>
-      <a href="users.html">Lista</a>
       <link rel="stylesheet" href="style.css">
-      
 
     </div>
   </div>
 
 
+  
   <main class="container">
-    <h2>Login</h2>
-    <form id="loginForm">
-      <label>Usuário</label>
-      <input type="text" id="loginUsername" required />
+    <h2>Usuários Cadastrados</h2>
 
-      <label>Senha</label>
-      <input type="password" id="loginPassword" required />
+    <div class="user-count">
+      <p>Total de usuários: <span id="userCount">0</span></p>
+    </div>
 
-      <button type="submit">Entrar</button>
-      <p class="link">Não tem conta? <a href="register.html">Cadastrar</a></p>
-    </form>
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Usuário</th>
+          <th>Data de Criação</th>
+        </tr>
+      </thead>
+      <tbody id="userList"></tbody>
+    </table>
+
+    <button id="logout">Sair</button>
   </main>
 
   <script src="script.js"></script>

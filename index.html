@@ -3,62 +3,175 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Home - E-commerce</title>
+  <title>Sistema de Login AWS</title>
   <style>
-    body { margin: 0; font-family: Arial, sans-serif; background: #f9f9f9; }
-    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background: #d9b24c; color: #333; }
-    .navbar a { color: #333; margin-left: 15px; text-decoration: none; font-weight: bold; }
-    .search-box input { padding: 8px; width: 250px; border: 1px solid #888; }
-    .hero-img { display: block; margin: 40px auto; width: 80%; max-width: 700px; }
-    .about, .credibility, .products { max-width: 900px; margin: 40px auto; line-height: 1.6; }
-    .about h2, .credibility h2, .products h2 { text-align: center; }
-    .product-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-    .product-card { background: #fff; padding: 20px; border: 1px solid #ccc; text-align: center; }
   </style>
 </head>
 <body>
   <div class="navbar">
-    <div class="logo">Minha Loja</div>
-    <div class="search-box">
-      <input type="text" placeholder="Pesquisar produtos..." />
-    </div>
+    <div class="logo">Sistema de Login AWS</div>
     <div>
       <a href="login.html">Login</a>
       <a href="register.html">Cadastro</a>
+      <a href="users.html">Lista</a>
+
+      <link rel="stylesheet" href="style.css">
     </div>
   </div>
 
-  <img class="hero-img" src="https://via.placeholder.com/900x300" alt="Imagem da loja" />
+  <main>
+    <section>
+      <h1>Sobre o Projeto</h1>
+      <p>
+        Sistema de cadastro e login com <strong>JWT</strong> para gerenciamento de sessão, desenvolvido em <strong>Golang</strong>.
+      </p>
+      <p>
+        O sistema foi implantado na <strong>AWS</strong>, utilizando uma arquitetura totalmente automatizada para gerenciar o deploy e a orquestração do ambiente.
+      </p>
+    </section>
 
-  <div class="about">
-    <h2>Sobre a Plataforma</h2>
-    <p>Bem-vindo ao nosso e-commerce! Aqui você encontra produtos variados e de qualidade. Buscamos inovação, preços acessíveis e praticidade para o seu dia a dia.</p>
-  </div>
 
-  <div class="credibility">
-    <h2>Por que comprar conosco?</h2>
-    <p>- Mais de 10 anos de experiência no mercado.</p>
-    <p>- Entregas rápidas para todo o Brasil.</p>
-    <p>- Pagamento seguro e diversos métodos disponíveis.</p>
-    <p>- Suporte ao cliente dedicado e atendimento humanizado.</p>
-    <p>- Garantia de troca e devolução simples e sem complicações.</p>
-  </div>
+  <section class="test-now">
+    <h2>Testar Agora</h2>
+    <p>Experimente o sistema em ação. Faça login, cadastre-se ou veja todos os usuários já registrados.</p>
+    <div class="buttons">
+      <a href="login.html" class="btn">Login</a>
+      <a href="register.html" class="btn">Cadastrar</a>
+      <a href="users.html" class="btn btn-secondary">Listar Usuários</a>
+    </div>
 
-  <div class="products">
-    <h2>Produtos</h2>
-    <div class="product-list" id="product-list"></div>
-  </div>
+  </section>
 
-  <script>
-    const products = [ { name: "Produto Exemplo 1" }, { name: "Produto Exemplo 2" }, { name: "Produto Exemplo 3" } ];
-    const container = document.getElementById("product-list");
-    products.forEach(p => {
-      const card = document.createElement("div");
-      card.className = "product-card";
-      card.textContent = p.name;
-      container.appendChild(card);
-    });
-  </script>
+    <section>
+      <h2>Visualização do Processo</h2>
+      <img src="./image.png" alt="Diagrama de arquitetura do sistema" />
+    </section>
+
+    <section>
+      <h2>Serviços AWS Utilizados</h2>
+      <ul>
+        <li><strong>EC2 (x2)</strong> – Uma instância para o <strong>front-end</strong> (porta 80 pública) e outra para o <strong>back-end</strong> (apenas recebe requisições do front-end e tem porta privada para deploy).</li>
+        <li><strong>Lambda</strong> – Função que inicia o processo de deploy automático na EC2.</li>
+        <li><strong>ECR</strong> – Repositório onde as imagens Docker são armazenadas, geradas via <strong>GitHub Actions</strong>.</li>
+        <li><strong>EventBridge</strong> – Detecta novas imagens no ECR e aciona a função Lambda.</li>
+        <li><strong>RDS (PostgreSQL)</strong> – Responsável pela persistência de dados, em subnet privada da mesma VPC.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Estratégia de Branching (Git Flow Simplificado)</h2>
+      <table>
+        <thead>
+          <tr><th>Branch</th><th>Propósito</th><th>Regra de Uso</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>dev</code></td><td>Desenvolvimento ativo e novas funcionalidades.</td><td>Única branch com commits diretos.</td></tr>
+          <tr><td><code>test</code></td><td>Ambiente de testes e integração.</td><td>Recebe apenas merges da <code>dev</code>.</td></tr>
+          <tr><td><code>master</code></td><td>Base de produção e geração da imagem Docker.</td><td>Recebe apenas merges automáticos da <code>test</code>.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Pipeline de Integração Contínua (CI) – GitHub Actions</h2>
+      <p>O pipeline é acionado automaticamente quando ocorre um merge de <code>dev</code> → <code>test</code>.</p>
+
+      <table>
+        <thead>
+          <tr><th>Etapa</th><th>Ação</th><th>Resultado</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1. Testes</td><td>Executa testes de unidade e integração.</td><td>Pipeline continua.</td></tr>
+          <tr><td>2. Merge Automático</td><td>Se todos os testes passarem, merge automático de <code>test</code> → <code>master</code>.</td><td>Código pronto para produção.</td></tr>
+          <tr><td>3. Build e Containerização</td><td>Gera a imagem Docker.</td><td>Imagem pronta localmente.</td></tr>
+          <tr><td>4. Teste em Container</td><td>Valida a imagem gerada.</td><td>Container validado.</td></tr>
+          <tr><td>5. Push para ECR</td><td>Envia a imagem para o repositório AWS ECR.</td><td>Imagem disponível para deploy.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Fluxo de Entrega Contínua (CD) na AWS</h2>
+      <ol>
+        <li><strong>EventBridge</strong> detecta o envio de nova imagem ao ECR.</li>
+        <li><strong>Lambda</strong> é invocada automaticamente.</li>
+        <li>A função <strong>Lambda</strong> chama a rota de deploy na <strong>EC2</strong>.</li>
+        <li>A EC2 faz pull da nova imagem, para o container anterior e executa o novo.</li>
+      </ol>
+      <p>Resultado: deploy automatizado e validado, sem intervenção manual.</p>
+    </section>
+
+    <section>
+      <h2>Diagrama do Fluxo Completo</h2>
+      <pre>
+[Desenvolvedor]
+       |
+       v
+  +----------+
+  |  Commit  |   <- apenas na branch `dev`
+  +----------+
+       |
+       v
+  +-----------------------------+
+  | Merge: dev -> test (gatilho)|
+  +-----------------------------+
+       |
+       v
+  +--------------------------------------------------+
+  |      [ CI/CD: GitHub Actions - Pipeline ]        |
+  +--------------------------------------------------+
+       |
+       +--> 1. Executar Testes (Unitários/Integração)
+       |
+       +--> 2. Se sucesso: Merge automático test -> master
+       |
+       +--> 3. Build & Teste em Container (base master)
+       |
+       +--> 4. Push da Imagem Docker p/ AWS ECR
+       |
+       v
+  +--------------------------------------------------+
+  |                 [ AWS ECR ]                      |
+  |        (Imagem armazenada e versionada)          |
+  +--------------------------------------------------+
+       |
+       v
+  +--------------------------------------------------+
+  |              [ AWS EventBridge ]                 |
+  |       (Detecta evento de push no ECR)            |
+  +--------------------------------------------------+
+       |
+       v
+  +--------------------------------------------------+
+  |                [ AWS Lambda ]                    |
+  |     (Invoca API de Deploy na instância EC2)      |
+  +--------------------------------------------------+
+       |
+       v
+  +--------------------------------------------------+
+  |           [ AWS EC2 - API de Deploy ]            |
+  |   - Pull da nova imagem                          |
+  |   - Parada/remoção do container anterior          |
+  |   - Execução do container atualizado              |
+  +--------------------------------------------------+
+       |
+       v
+     [ Aplicação Atualizada e em Execução ]
+      </pre>
+    </section>
+
+    <section>
+      <h2>Teste em Produção</h2>
+      <p>
+        Após o desenvolvimento do sistema de login e cadastro, ele foi implantado com sucesso na nuvem.
+        A instância EC2 do front-end comunica-se corretamente com a instância de back-end,
+        permitindo o registro e login com persistência completa dos dados no <strong>RDS PostgreSQL</strong>.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 - Sistema de Login AWS | Projeto desenvolvido por Senhor Marcos
+  </footer>
 </body>
 </html>
-
